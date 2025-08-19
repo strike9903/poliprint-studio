@@ -17,8 +17,12 @@ interface CatalogFilters {
   search?: string;
 }
 
-export function ProductCatalog() {
-  const [filters, setFilters] = useState<CatalogFilters>({});
+interface ProductCatalogProps {
+  category?: ProductCategory;
+}
+
+export function ProductCatalog({ category }: ProductCatalogProps) {
+  const [filters, setFilters] = useState<CatalogFilters>({ category });
   const [sortBy, setSortBy] = useState<'popular' | 'price-asc' | 'price-desc' | 'newest'>('popular');
   
   const { data: products, isLoading, error } = useQuery({

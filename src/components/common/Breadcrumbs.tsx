@@ -16,9 +16,10 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   const pathname = usePathname();
-  
+  const locale = pathname.split("/")[1] || "ua";
+
   // Auto-generate breadcrumbs from pathname if items not provided
-  const breadcrumbItems = items || generateBreadcrumbs(pathname);
+  const breadcrumbItems = items || generateBreadcrumbs(pathname, locale);
   
   if (breadcrumbItems.length <= 1) return null;
 
@@ -28,7 +29,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
       className={`flex items-center space-x-1 text-sm text-muted-foreground ${className}`}
     >
       <Link 
-        href="/" 
+        href={`/${locale}`}
         className="hover:text-foreground transition-colors p-1"
         aria-label="Головна"
       >
@@ -56,24 +57,24 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   );
 }
 
-function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
-  const segments = pathname.split('/').filter(Boolean);
+function generateBreadcrumbs(pathname: string, locale: string): BreadcrumbItem[] {
+  const segments = pathname.split('/').filter(Boolean).slice(1); // skip locale
   const breadcrumbs: BreadcrumbItem[] = [];
-  
-  let currentPath = '';
-  
+
+  let currentPath = `/${locale}`;
+
   segments.forEach((segment, index) => {
     currentPath += `/${segment}`;
-    
+
     // Map segments to human-readable labels
     const label = getBreadcrumbLabel(segment, segments[index - 1]);
-    
+
     breadcrumbs.push({
       label,
       href: currentPath
     });
   });
-  
+
   return breadcrumbs;
 }
 

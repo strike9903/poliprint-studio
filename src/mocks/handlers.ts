@@ -1,9 +1,10 @@
 import { http, HttpResponse } from 'msw';
-import type { 
-  Product, 
-  CartItem, 
-  Order, 
-  PricingRequest, 
+import { products } from '@/data/products';
+
+import type {
+  CartItem,
+  Order,
+  PricingRequest,
   PricingResponse,
   NovaPoshtaCity,
   NovaPoshtaWarehouse,
@@ -11,160 +12,6 @@ import type {
   BlogPost,
   User
 } from '@/types';
-
-// Mock data
-const products: Product[] = [
-  {
-    id: 'canvas-classic',
-    slug: 'canvas-classic',
-    title: {
-      ua: 'Класичний холст',
-      ru: 'Классический холст'
-    },
-    description: {
-      ua: 'Високоякісний друк на полотні з підрамником',
-      ru: 'Высококачественная печать на холсте с подрамником'
-    },
-    category: 'canvas',
-    basePrice: 350,
-    currency: 'UAH',
-    images: [
-      {
-        id: '1',
-        url: '/api/placeholder/600/400',
-        alt: { ua: 'Холст класичний', ru: 'Холст классический' },
-        type: 'gallery',
-        order: 1
-      }
-    ],
-    configSchema: {
-      type: 'canvas',
-      fields: [
-        {
-          id: 'size',
-          type: 'select',
-          label: { ua: 'Розмір', ru: 'Размер' },
-          required: true,
-          options: [
-            { value: '30x40', label: { ua: '30×40 см', ru: '30×40 см' } },
-            { value: '40x60', label: { ua: '40×60 см', ru: '40×60 см' } },
-            { value: '60x90', label: { ua: '60×90 см', ru: '60×90 см' } },
-            { value: 'custom', label: { ua: 'Довільний', ru: 'Произвольный' } }
-          ],
-          defaultValue: '40x60'
-        },
-        {
-          id: 'edge',
-          type: 'radio',
-          label: { ua: 'Обробка країв', ru: 'Обработка краев' },
-          required: true,
-          options: [
-            { value: 'gallery', label: { ua: 'Галерейна', ru: 'Галерейная' } },
-            { value: 'mirror', label: { ua: 'Дзеркальна', ru: 'Зеркальная' } },
-            { value: 'solid', label: { ua: 'Суцільний колір', ru: 'Сплошной цвет' } }
-          ],
-          defaultValue: 'gallery'
-        }
-      ]
-    },
-    techSpecs: {},
-    isActive: true,
-    createdAt: '2024-01-01',
-    updatedAt: '2024-01-01'
-  },
-  {
-    id: 'acrylic-premium',
-    slug: 'acrylic-premium',
-    title: {
-      ua: 'Преміум акрил',
-      ru: 'Премиум акрил'
-    },
-    description: {
-      ua: 'Друк на акрилі з підсвічуванням',
-      ru: 'Печать на акриле с подсветкой'
-    },
-    category: 'acrylic',
-    basePrice: 580,
-    currency: 'UAH',
-    images: [
-      {
-        id: '2',
-        url: '/api/placeholder/600/400',
-        alt: { ua: 'Акрил преміум', ru: 'Акрил премиум' },
-        type: 'gallery',
-        order: 1
-      }
-    ],
-    configSchema: {
-      type: 'acrylic',
-      fields: [
-        {
-          id: 'thickness',
-          type: 'select',
-          label: { ua: 'Товщина', ru: 'Толщина' },
-          required: true,
-          options: [
-            { value: '3mm', label: { ua: '3 мм', ru: '3 мм' } },
-            { value: '5mm', label: { ua: '5 мм', ru: '5 мм' } },
-            { value: '8mm', label: { ua: '8 мм', ru: '8 мм' } },
-            { value: '10mm', label: { ua: '10 мм', ru: '10 мм' } }
-          ],
-          defaultValue: '5mm'
-        }
-      ]
-    },
-    techSpecs: {},
-    isActive: true,
-    createdAt: '2024-01-01',
-    updatedAt: '2024-01-01'
-  },
-  {
-    id: 'business-cards-premium',
-    slug: 'business-cards-premium',
-    title: {
-      ua: 'Преміум візитки',
-      ru: 'Премиум визитки'
-    },
-    description: {
-      ua: 'Візитки на преміум папері з ламінуванням',
-      ru: 'Визитки на премиум бумаге с ламинированием'
-    },
-    category: 'business-cards',
-    basePrice: 120,
-    currency: 'UAH',
-    images: [
-      {
-        id: '3',
-        url: '/api/placeholder/600/400',
-        alt: { ua: 'Візитки преміум', ru: 'Визитки премиум' },
-        type: 'gallery',
-        order: 1
-      }
-    ],
-    configSchema: {
-      type: 'business-cards',
-      fields: [
-        {
-          id: 'quantity',
-          type: 'select',
-          label: { ua: 'Тираж', ru: 'Тираж' },
-          required: true,
-          options: [
-            { value: '100', label: { ua: '100 шт', ru: '100 шт' } },
-            { value: '250', label: { ua: '250 шт', ru: '250 шт' } },
-            { value: '500', label: { ua: '500 шт', ru: '500 шт' } },
-            { value: '1000', label: { ua: '1000 шт', ru: '1000 шт' } }
-          ],
-          defaultValue: '250'
-        }
-      ]
-    },
-    techSpecs: {},
-    isActive: true,
-    createdAt: '2024-01-01',
-    updatedAt: '2024-01-01'
-  }
-];
 
 const cities: NovaPoshtaCity[] = [
   {

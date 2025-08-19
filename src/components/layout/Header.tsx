@@ -1,20 +1,25 @@
+"use client";
+
 import { useState } from "react";
 import { Menu, X, ShoppingCart, User, Search, Phone } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1] || "ua";
 
   const navigationItems = [
-    { name: "Каталог", href: "/catalog", hasDropdown: true },
-    { name: "Холст", href: "/catalog/canvas" },
-    { name: "Акрил", href: "/catalog/acrylic" },
-    { name: "Визитки", href: "/catalog/business-cards" },
-    { name: "Футболки", href: "/apparel/tshirts" },
-    { name: "Шаблони", href: "/templates" },
-    { name: "Блог", href: "/blog" },
+    { name: "Каталог", href: `/${locale}/catalog`, hasDropdown: true },
+    { name: "Холст", href: `/${locale}/catalog/canvas` },
+    { name: "Акрил", href: `/${locale}/catalog/acrylic` },
+    { name: "Визитки", href: `/${locale}/catalog/business-cards` },
+    { name: "Футболки", href: `/${locale}/apparel/tshirts` },
+    { name: "Шаблони", href: `/${locale}/templates` },
+    { name: "Блог", href: `/${locale}/blog` },
   ];
 
   return (

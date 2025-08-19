@@ -1,15 +1,21 @@
+"use client";
+
 import { ArrowRight, Palette, CreditCard, Shirt, Image, FileText, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { usePathname } from "next/navigation";
 
 export const PopularCategories = () => {
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1] || "ua";
+
   const categories = [
     {
       name: "Друк на холсті",
       description: "Ваші фото на високоякісному холсті з галерейною або дзеркальною кромкою",
       icon: Palette,
-      href: "/catalog/canvas",
+      href: `/${locale}/catalog/canvas`,
       price: "від 180 ₴",
       tag: "Хіт продажів",
       image: "🖼️",
@@ -19,7 +25,7 @@ export const PopularCategories = () => {
       name: "Акрил та скло",
       description: "Преміум друк на акрилі з підсвіткою та дистанційними кріпленнями",
       icon: Image,
-      href: "/catalog/acrylic",
+      href: `/${locale}/catalog/acrylic`,
       price: "від 320 ₴",
       tag: "Преміум",
       image: "💎",
@@ -29,7 +35,7 @@ export const PopularCategories = () => {
       name: "Візитні картки",
       description: "Класичні та дизайнерські візитки з ламінацією та спецефектами",
       icon: CreditCard,
-      href: "/catalog/business-cards",
+      href: `/${locale}/catalog/business-cards`,
       price: "від 25 ₴",
       tag: "Швидко",
       image: "💼",
@@ -39,7 +45,7 @@ export const PopularCategories = () => {
       name: "Футболки DTF",
       description: "Якісний друк на футболках технологією DTF - яскраві кольори, м'яка відчуття",
       icon: Shirt,
-      href: "/apparel/tshirts",
+      href: `/${locale}/apparel/tshirts`,
       price: "від 150 ₴",
       tag: "Нова технологія",
       image: "👕",
@@ -49,7 +55,7 @@ export const PopularCategories = () => {
       name: "Листівки та флаєри",
       description: "Рекламні матеріали високої якості з швидким виконанням",
       icon: FileText,
-      href: "/catalog/flyers",
+      href: `/${locale}/catalog/flyers`,
       price: "від 15 ₴",
       tag: "Експрес",
       image: "📄",
@@ -59,7 +65,7 @@ export const PopularCategories = () => {
       name: "Упаковка",
       description: "Коробки, пакети, етикетки за вашим дизайном з швидким виконанням",
       icon: Package,
-      href: "/catalog/packaging",
+      href: `/${locale}/catalog/packaging`,
       price: "від 45 ₴",
       tag: "Під замовлення",
       image: "📦",
@@ -150,7 +156,7 @@ export const PopularCategories = () => {
         {/* CTA */}
         <div className="text-center mt-12">
           <Button size="lg" variant="outline" className="btn-hero-outline" asChild>
-            <a href="/catalog">
+            <a href={`/${locale}/catalog`}>
               Дивитись всі категорії
               <ArrowRight className="w-5 h-5 ml-2" />
             </a>

@@ -66,11 +66,14 @@ if (process.env.NODE_ENV === 'development') {
 
 export default function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { locale: string };
 }) {
+  const locale = params?.locale || 'ua';
   return (
-    <html lang="uk" className="dark">
+    <html lang={locale} className="dark">
       <body className={`${inter.variable} ${plusJakartaSans.variable} font-sans antialiased`}>
         <Providers>
           {children}

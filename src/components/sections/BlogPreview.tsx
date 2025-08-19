@@ -1,9 +1,15 @@
+"use client";
+
 import { Calendar, Clock, ArrowRight, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { usePathname } from "next/navigation";
 
 export const BlogPreview = () => {
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1] || "ua";
+
   const blogPosts = [
     {
       id: 1,
@@ -122,7 +128,7 @@ export const BlogPreview = () => {
         {/* CTA */}
         <div className="text-center">
           <Button size="lg" variant="outline" className="btn-hero-outline" asChild>
-            <a href="/blog">
+            <a href={`/${locale}/blog`}>
               Дивитись всі статті
               <ArrowRight className="w-5 h-5 ml-2" />
             </a>

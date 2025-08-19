@@ -1,24 +1,30 @@
+"use client";
+
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { usePathname } from "next/navigation";
 
 export const Footer = () => {
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1] || "ua";
+
   const quickLinks = [
-    { name: "Холст", href: "/catalog/canvas" },
-    { name: "Акрил", href: "/catalog/acrylic" },
-    { name: "Візитки", href: "/catalog/business-cards" },
-    { name: "Листівки", href: "/catalog/flyers" },
-    { name: "Наклейки", href: "/catalog/stickers" },
-    { name: "Футболки", href: "/apparel/tshirts" },
+    { name: "Холст", href: `/${locale}/catalog/canvas` },
+    { name: "Акрил", href: `/${locale}/catalog/acrylic` },
+    { name: "Візитки", href: `/${locale}/catalog/business-cards` },
+    { name: "Листівки", href: `/${locale}/catalog/flyers` },
+    { name: "Наклейки", href: `/${locale}/catalog/stickers` },
+    { name: "Футболки", href: `/${locale}/apparel/tshirts` },
   ];
 
   const helpLinks = [
-    { name: "Технічні вимоги", href: "/help/tech-requirements" },
-    { name: "Доставка", href: "/help/delivery" },
-    { name: "Оплата", href: "/help/payment" },
-    { name: "Відстежити замовлення", href: "/track" },
-    { name: "FAQ", href: "/help/faq" },
-    { name: "Контакти", href: "/contacts" },
+    { name: "Технічні вимоги", href: `/${locale}/help/tech-requirements` },
+    { name: "Доставка", href: `/${locale}/help/delivery` },
+    { name: "Оплата", href: `/${locale}/help/payment` },
+    { name: "Відстежити замовлення", href: `/${locale}/track` },
+    { name: "FAQ", href: `/${locale}/help/faq` },
+    { name: "Контакти", href: `/${locale}/contacts` },
   ];
 
   const paymentMethods = [
@@ -160,10 +166,10 @@ export const Footer = () => {
             </div>
 
             <div className="flex gap-4 text-sm">
-              <a href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href={`/${locale}/privacy`} className="text-muted-foreground hover:text-primary transition-colors">
                 Політика конфіденційності
               </a>
-              <a href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href={`/${locale}/terms`} className="text-muted-foreground hover:text-primary transition-colors">
                 Умови використання
               </a>
             </div>
