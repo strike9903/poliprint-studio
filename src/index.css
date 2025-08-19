@@ -110,7 +110,7 @@
   }
   
   .card-product {
-    @apply bg-surface border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group;
+    @apply bg-surface border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300;
   }
 
   /* Text gradients */
