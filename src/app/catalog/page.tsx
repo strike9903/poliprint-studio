@@ -3,7 +3,6 @@ import { ProductCatalog } from "@/components/catalog/ProductCatalog";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
-import { SEO } from "@/components/common/SEO";
 
 export const metadata: Metadata = {
   title: "Каталог продукції - Poliprint Studio",
@@ -17,19 +16,6 @@ export const metadata: Metadata = {
 export default function CatalogPage() {
   return (
     <>
-      <SEO 
-        title="Каталог продукції - Poliprint Studio"
-        description="Повний каталог послуг друку: холсти, акрил, візитки, поліграфія, мерч. Оберіть продукт та налаштуйте параметри онлайн."
-        canonical="/catalog"
-        jsonLd={{
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          "name": "Каталог продукції",
-          "description": "Повний каталог послуг друку",
-          "url": "https://poliprint.ua/catalog"
-        }}
-      />
-      
       <div className="min-h-screen bg-background">
         <Header />
         
