@@ -1,16 +1,22 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User } from '@/types';
+import type { User, AuthUser, LoginCredentials, RegisterData } from '@/types';
 
 interface AuthStore {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (data: { email: string; password: string; firstName?: string; lastName?: string }) => Promise<void>;
-  logout: () => void;
+  isLoading: boolean;
+  error: string | null;
+  
+  // Actions
+  login: (credentials: LoginCredentials) => Promise<void>;
+  register: (data: RegisterData) => Promise<void>;
+  logout: () => Promise<void>;
+  checkAuth: () => Promise<void>;
   setUser: (user: User) => void;
   updateUser: (updates: Partial<User>) => void;
+  clearError: () => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -19,18 +25,23 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      isLoading: false,
+      error: null,
 
-      login: async (email: string, password: string) => {
+      login: async (credentials: LoginCredentials) => {
+        set({ isLoading: true, error: null });
+        
         try {
-          // TODO: Replace with actual API call
           const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify(credentials),
+            credentials: 'include' // Include cookies
           });
 
           if (!response.ok) {
-            throw new Error('Login failed');
+            const error = await response.json();
+            throw new Error(error.error || 'Login failed');
           }
 
           const { user, token } = await response.json();
@@ -38,25 +49,37 @@ export const useAuthStore = create<AuthStore>()(
           set({
             user,
             token,
-            isAuthenticated: true
+            isAuthenticated: true,
+            isLoading: false,
+            error: null
           });
         } catch (error) {
-          console.error('Login error:', error);
+          const errorMessage = error instanceof Error ? error.message : 'Login failed';
+          set({ 
+            isLoading: false, 
+            error: errorMessage,
+            user: null,
+            token: null,
+            isAuthenticated: false
+          });
           throw error;
         }
       },
 
-      register: async (data) => {
+      register: async (data: RegisterData) => {
+        set({ isLoading: true, error: null });
+        
         try {
-          // TODO: Replace with actual API call
           const response = await fetch('/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            credentials: 'include' // Include cookies
           });
 
           if (!response.ok) {
-            throw new Error('Registration failed');
+            const error = await response.json();
+            throw new Error(error.error || 'Registration failed');
           }
 
           const { user, token } = await response.json();
@@ -64,24 +87,85 @@ export const useAuthStore = create<AuthStore>()(
           set({
             user,
             token,
-            isAuthenticated: true
+            isAuthenticated: true,
+            isLoading: false,
+            error: null
           });
         } catch (error) {
-          console.error('Registration error:', error);
+          const errorMessage = error instanceof Error ? error.message : 'Registration failed';
+          set({ 
+            isLoading: false, 
+            error: errorMessage,
+            user: null,
+            token: null,
+            isAuthenticated: false
+          });
           throw error;
         }
       },
 
-      logout: () => {
-        set({
-          user: null,
-          token: null,
-          isAuthenticated: false
-        });
+      logout: async () => {
+        set({ isLoading: true });
+        
+        try {
+          // Call logout API to clear server-side session
+          await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include'
+          });
+        } catch (error) {
+          console.warn('Logout API call failed:', error);
+        } finally {
+          // Clear local state regardless of API call result
+          set({
+            user: null,
+            token: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: null
+          });
+        }
+      },
+
+      checkAuth: async () => {
+        set({ isLoading: true });
+        
+        try {
+          const response = await fetch('/api/auth/me', {
+            credentials: 'include'
+          });
+
+          if (response.ok) {
+            const { user } = await response.json();
+            set({
+              user,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null
+            });
+          } else {
+            // Not authenticated
+            set({
+              user: null,
+              token: null,
+              isAuthenticated: false,
+              isLoading: false,
+              error: null
+            });
+          }
+        } catch (error) {
+          set({
+            user: null,
+            token: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: null
+          });
+        }
       },
 
       setUser: (user: User) => {
-        set({ user, isAuthenticated: true });
+        set({ user, isAuthenticated: true, error: null });
       },
 
       updateUser: (updates: Partial<User>) => {
@@ -89,6 +173,10 @@ export const useAuthStore = create<AuthStore>()(
         if (currentUser) {
           set({ user: { ...currentUser, ...updates } });
         }
+      },
+
+      clearError: () => {
+        set({ error: null });
       }
     }),
     {
@@ -97,7 +185,13 @@ export const useAuthStore = create<AuthStore>()(
         user: state.user, 
         token: state.token, 
         isAuthenticated: state.isAuthenticated 
-      })
+      }),
+      // Auto-check auth on load
+      onRehydrateStorage: () => (state) => {
+        if (state?.isAuthenticated) {
+          state.checkAuth();
+        }
+      }
     }
   )
 );

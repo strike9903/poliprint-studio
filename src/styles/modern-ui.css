@@ -1,0 +1,204 @@
+/* 🎨 Modern UI Utilities for Poliprint */
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Modern focus styles */
+.focus-modern {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary/30 focus:ring-offset-1 focus:ring-offset-background;
+}
+
+/* Compact spacing for mobile */
+.space-compact > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0.75rem;
+}
+
+.gap-compact {
+  gap: 0.75rem;
+}
+
+/* Modern shadows with color */
+.shadow-modern {
+  box-shadow: 
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px 0 rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.shadow-elevated {
+  box-shadow: 
+    0 10px 25px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Better mobile touch targets */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Responsive text sizes */
+.text-responsive-xl {
+  @apply text-lg sm:text-xl lg:text-2xl;
+}
+
+.text-responsive-2xl {
+  @apply text-xl sm:text-2xl lg:text-3xl;
+}
+
+.text-responsive-3xl {
+  @apply text-2xl sm:text-3xl lg:text-4xl;
+}
+
+/* Mobile-optimized spacing */
+.section-mobile {
+  @apply py-6 sm:py-8 lg:py-12;
+}
+
+.container-mobile {
+  @apply px-3 sm:px-4 lg:px-6;
+}
+
+/* Enhanced hover states */
+.hover-modern {
+  @apply hover:bg-muted/50 hover:scale-[1.01] transition-all duration-200 cursor-pointer;
+}
+
+/* Better button states */
+.btn-state {
+  @apply active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+}
+
+/* Optimized modal styles */
+.modal-modern {
+  @apply max-h-[90vh] overflow-hidden rounded-xl border border-border/50 bg-background shadow-elevated;
+}
+
+.modal-content {
+  @apply overflow-y-auto scrollbar-modern max-h-[80vh];
+}
+
+/* Gradient backgrounds */
+.bg-gradient-subtle {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--background)) 0%,
+    hsl(var(--muted) / 0.3) 100%
+  );
+}
+
+.bg-gradient-hero {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--background)) 0%,
+    hsl(var(--muted) / 0.5) 50%,
+    hsl(var(--primary) / 0.1) 100%
+  );
+}
+
+/* Loading states */
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 0%,
+    hsl(var(--muted) / 0.8) 50%,
+    hsl(var(--muted)) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Micro-interactions */
+.micro-bounce {
+  @apply transition-transform duration-100 active:scale-95;
+}
+
+.micro-glow {
+  @apply transition-shadow duration-300 hover:shadow-lg hover:shadow-primary/10;
+}
+
+/* Better form styling */
+.form-modern .input {
+  @apply border-border/50 bg-background/50 backdrop-blur-sm focus:border-primary/50 focus:bg-background;
+}
+
+.form-modern .label {
+  @apply text-xs font-medium text-muted-foreground mb-1;
+}
+
+/* Status indicators */
+.indicator-dot {
+  @apply w-2 h-2 rounded-full;
+}
+
+.indicator-online {
+  @apply bg-green-500 shadow-lg shadow-green-500/20;
+}
+
+.indicator-offline {
+  @apply bg-red-500 shadow-lg shadow-red-500/20;
+}
+
+.indicator-pending {
+  @apply bg-yellow-500 shadow-lg shadow-yellow-500/20 animate-pulse;
+}
+
+/* Modern navigation */
+.nav-modern {
+  @apply flex items-center gap-1 text-sm font-medium;
+}
+
+.nav-modern .nav-item {
+  @apply px-3 py-1.5 rounded-lg hover:bg-muted/50 transition-colors;
+}
+
+.nav-modern .nav-item.active {
+  @apply bg-primary/10 text-primary;
+}
+
+/* Compact badges */
+.badge-compact {
+  @apply inline-flex items-center px-1.5 py-0.5 rounded-md text-xs font-medium;
+}
+
+/* Better mobile breakpoints */
+@media (max-width: 640px) {
+  .mobile-stack > * {
+    width: 100% !important;
+    margin-bottom: 0.5rem;
+  }
+  
+  .mobile-hidden {
+    display: none !important;
+  }
+  
+  .mobile-full {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+}
+
+/* Print-specific styles */
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-break {
+    page-break-after: always;
+  }
+  
+  .print-avoid-break {
+    page-break-inside: avoid;
+  }
+}

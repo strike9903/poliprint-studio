@@ -287,13 +287,53 @@ export interface OrderTimeline {
 export interface User {
   id: string;
   email: string;
+  name: string; // Display name
   phone?: string;
   firstName?: string;
   lastName?: string;
-  role: 'customer' | 'admin';
-  addresses: SavedAddress[];
-  preferences: UserPreferences;
-  createdAt: string;
+  avatar?: string | null;
+  role: 'user' | 'admin';
+  addresses?: SavedAddress[];
+  preferences?: UserPreferences;
+  emailVerified?: boolean;
+  createdAt?: string;
+  stats?: UserStats;
+}
+
+export interface UserStats {
+  totalOrders: number;
+  totalSpent: number;
+  memberSince: string;
+}
+
+// Auth-specific types
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+  phone?: string;
+  avatar?: string | null;
+  role: 'user' | 'admin';
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterData {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+}
+
+export interface AuthResponse {
+  success: boolean;
+  user: AuthUser;
+  token: string;
+  message?: string;
 }
 
 export interface SavedAddress {

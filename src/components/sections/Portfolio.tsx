@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Eye, Heart, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "@/hooks/use-toast";
 
 export const Portfolio = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -104,6 +105,33 @@ export const Portfolio = () => {
     ? portfolioItems 
     : portfolioItems.filter(item => item.category === selectedCategory);
 
+  const handleView = (item: any) => {
+    // Показать модальное окно с детальным просмотром
+    toast({
+      title: "Перегляд роботи",
+      description: `Відкриваю детальний перегляд: ${item.title}`,
+    });
+    // TODO: Открыть модальное окно с увеличенным изображением
+  };
+
+  const handleLike = (item: any) => {
+    // Добавить в избранное
+    toast({
+      title: "Додано в обране ❤️",
+      description: `${item.title} додано до ваших улюблених робіт`,
+    });
+    // TODO: Добавить в локальное хранилище или контекст избранного
+  };
+
+  const handleDownload = (item: any) => {
+    // Скачать превью или открыть высокое разрешение
+    toast({
+      title: "Завантаження",
+      description: `Завантажую ${item.title} у високій якості...`,
+    });
+    // TODO: Реализовать скачивание или показ high-res версии
+  };
+
   return (
     <section className="py-16 bg-surface">
       <div className="container mx-auto px-4">
@@ -151,13 +179,28 @@ export const Portfolio = () => {
                 
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                  <Button size="icon" variant="secondary" className="hover:scale-110 transition-transform">
+                  <Button 
+                    size="icon" 
+                    variant="secondary" 
+                    className="hover:scale-110 transition-transform"
+                    onClick={() => handleView(item)}
+                  >
                     <Eye className="w-4 h-4" />
                   </Button>
-                  <Button size="icon" variant="secondary" className="hover:scale-110 transition-transform">
+                  <Button 
+                    size="icon" 
+                    variant="secondary" 
+                    className="hover:scale-110 transition-transform hover:text-red-500"
+                    onClick={() => handleLike(item)}
+                  >
                     <Heart className="w-4 h-4" />
                   </Button>
-                  <Button size="icon" variant="secondary" className="hover:scale-110 transition-transform">
+                  <Button 
+                    size="icon" 
+                    variant="secondary" 
+                    className="hover:scale-110 transition-transform"
+                    onClick={() => handleDownload(item)}
+                  >
                     <Download className="w-4 h-4" />
                   </Button>
                 </div>
@@ -206,8 +249,10 @@ export const Portfolio = () => {
 
         {/* CTA */}
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline" className="btn-hero-outline">
-            Дивитись всі роботи
+          <Button size="lg" variant="outline" className="btn-hero-outline" asChild>
+            <a href="/portfolio">
+              Дивитись всі роботи
+            </a>
           </Button>
         </div>
       </div>

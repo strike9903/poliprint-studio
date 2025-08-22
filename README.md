@@ -1,73 +1,100 @@
-# Welcome to your Lovable project
+# PrintStudio - Онлайн друк сервіс
 
-## Project info
+## Про проект
 
-**URL**: https://lovable.dev/projects/5f70d6a4-d531-4dd6-8cea-a85ad3c71145
+PrintStudio - це сучасний веб-додаток для онлайн друку, розроблений з використанням Next.js 14, TypeScript, Tailwind CSS та shadcn/ui. Додаток підтримує багатомовність (uk/ru) через next-intl та працює з валютою UAH.
 
-## How can I edit this code?
+## Технології
 
-There are several ways of editing your application.
+- Next.js 14 (App Router)
+- TypeScript (strict mode)
+- Tailwind CSS
+- shadcn/ui компоненти
+- next-intl (i18n: uk/ru)
+- Валюта: UAH
 
-**Use Lovable**
+## Локальний запуск
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5f70d6a4-d531-4dd6-8cea-a85ad3c71145) and start prompting.
+### Вимоги
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js >= 20
+- pnpm 9
 
-**Use your preferred IDE**
+Якщо у вас не встановлені необхідні версії, встановіть їх через nvm:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```bash
+# Встановлення nvm (якщо ще не встановлено)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+# Встановлення Node.js 20
+nvm install 20
+nvm use 20
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Активація pnpm 9
+corepack enable
+corepack prepare pnpm@9.12.1 --activate
 ```
 
-**Edit a file directly in GitHub**
+### Запуск проекту
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+# Встановлення залежностей
+pnpm install
 
-**Use GitHub Codespaces**
+# Запуск в режимі розробки (порт 3000)
+pnpm dev
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Перегляд додатку:
+# http://localhost:3000/uk
+# http://localhost:3000/ru
+```
 
-## What technologies are used for this project?
+### Production збірка
 
-This project is built with:
+```bash
+# Збірка проекту
+pnpm build
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# Запуск production сервера (порт 3000)
+pnpm start
+```
 
-## How can I deploy this project?
+### Важливо
 
-Simply open [Lovable](https://lovable.dev/projects/5f70d6a4-d531-4dd6-8cea-a85ad3c71145) and click on Share -> Publish.
+Проект слухає **порт 3000** на всіх інтерфейсах (`0.0.0.0`), а не 8080. Якщо порт 3000 зайнятий, ви можете змінити його в `package.json`:
 
-## Can I connect a custom domain to my Lovable project?
+```json
+"scripts": {
+  "dev": "next dev --hostname 0.0.0.0 --port 3001",
+  "start": "next start --hostname 0.0.0.0 --port 3001"
+}
+```
 
-Yes, you can!
+## Структура проекту
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- `src/app/[locale]/layout.tsx` - Основний layout з навігацією та переключенням мов
+- `src/app/[locale]/(public)/page.tsx` - Головна сторінка
+- `src/app/[locale]/catalog/page.tsx` - Сторінка каталогу
+- `src/app/[locale]/catalog/[category]/page.tsx` - Сторінка категорії
+- `src/app/[locale]/product/[slug]/page.tsx` - Сторінка продукту
+- `src/app/api/` - Mock API endpoints
+- `src/i18n/messages/` - Файли перекладів (uk.json, ru.json)
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Доступні команди
+
+```bash
+# Запуск типізації
+pnpm typecheck
+
+# Лінтинг коду
+pnpm lint
+
+# Збірка проекту
+pnpm build
+
+# Запуск в режимі розробки
+pnpm dev
+
+# Запуск production сервера
+pnpm start
+```

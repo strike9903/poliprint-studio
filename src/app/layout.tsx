@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 import { Providers } from "@/components/providers/providers";
 import { Toaster } from "@/components/ui/toaster";
 import { enableMocking } from "@/lib/msw";
 
 const inter = Inter({ 
-  subsets: ["latin"], 
+  subsets: ["latin", "latin-ext", "cyrillic"], 
   variable: "--font-inter",
   display: "swap" 
 });
 
 const plusJakartaSans = Plus_Jakarta_Sans({ 
-  subsets: ["latin"], 
+  subsets: ["latin", "latin-ext", "cyrillic-ext"], 
   variable: "--font-heading",
   display: "swap" 
 });
@@ -64,13 +65,15 @@ if (process.env.NODE_ENV === 'development') {
   enableMocking();
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+  
   return (
-    <html lang="uk" className="dark">
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${inter.variable} ${plusJakartaSans.variable} font-sans antialiased`}>
         <Providers>
           {children}

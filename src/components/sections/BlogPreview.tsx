@@ -1,9 +1,15 @@
+"use client";
+
 import { Calendar, Clock, ArrowRight, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
+import { useParams } from "next/navigation";
 
 export const BlogPreview = () => {
+  const params = useParams();
+  const locale = params.locale as string || 'uk';
   const blogPosts = [
     {
       id: 1,
@@ -107,10 +113,10 @@ export const BlogPreview = () => {
                     </div>
                     
                     <Button size="sm" variant="ghost" className="group/btn text-xs" asChild>
-                      <a href={`/blog/${post.slug}`}>
+                      <Link href={`/blog/${post.slug}`}>
                         Читати
                         <ArrowRight className="w-3 h-3 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                      </a>
+                      </Link>
                     </Button>
                   </div>
                 </div>
@@ -122,10 +128,10 @@ export const BlogPreview = () => {
         {/* CTA */}
         <div className="text-center">
           <Button size="lg" variant="outline" className="btn-hero-outline" asChild>
-            <a href="/blog">
+            <Link href="/blog">
               Дивитись всі статті
               <ArrowRight className="w-5 h-5 ml-2" />
-            </a>
+            </Link>
           </Button>
         </div>
       </div>

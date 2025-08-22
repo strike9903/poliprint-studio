@@ -1,9 +1,15 @@
+"use client";
+
 import { ArrowRight, Palette, CreditCard, Shirt, Image, FileText, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
+import { useParams } from "next/navigation";
 
 export const PopularCategories = () => {
+  const params = useParams();
+  const locale = params.locale as string || 'uk';
   const categories = [
     {
       name: "Друк на холсті",
@@ -134,10 +140,10 @@ export const PopularCategories = () => {
                         {category.price}
                       </div>
                       <Button size="sm" variant="ghost" className="group/btn" asChild>
-                        <a href={category.href}>
+                        <Link href={category.href}>
                           Налаштувати
                           <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                        </a>
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -150,10 +156,10 @@ export const PopularCategories = () => {
         {/* CTA */}
         <div className="text-center mt-12">
           <Button size="lg" variant="outline" className="btn-hero-outline" asChild>
-            <a href="/catalog">
+            <Link href="/catalog">
               Дивитись всі категорії
               <ArrowRight className="w-5 h-5 ml-2" />
-            </a>
+            </Link>
           </Button>
         </div>
       </div>

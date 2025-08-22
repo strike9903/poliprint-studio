@@ -1,8 +1,14 @@
+"use client";
+
 import { ArrowRight, Clock, Shield, Truck } from "lucide-react";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 
 export const HeroSection = () => {
+  const params = useParams();
+  const locale = params.locale as string || 'uk';
   return (
     <section className="relative min-h-[80vh] bg-gradient-hero flex items-center overflow-hidden">
       {/* Background decoration */}
@@ -49,17 +55,23 @@ export const HeroSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="btn-hero group">
-                Друк на холсті
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              <Button size="lg" className="btn-hero group" asChild>
+                <Link href="/configurator">
+                  🤖 AI Конфігуратор
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </Button>
               
-              <Button size="lg" variant="outline" className="btn-hero-outline">
-                Акрил та скло
+              <Button size="lg" variant="outline" className="btn-hero-outline" asChild>
+                <Link href="/catalog/canvas">
+                  Друк на холсті
+                </Link>
               </Button>
               
-              <Button size="lg" variant="outline" className="btn-hero-outline">
-                Візитки та флаєри
+              <Button size="lg" variant="outline" className="btn-hero-outline" asChild>
+                <Link href="/catalog/acrylic">
+                  Акрил та скло
+                </Link>
               </Button>
             </div>
 
@@ -82,19 +94,42 @@ export const HeroSection = () => {
 
           {/* Hero Image/3D Preview */}
           <div className="relative">
-            <div className="aspect-square bg-gradient-primary rounded-2xl shadow-strong relative overflow-hidden group">
-              {/* Placeholder for 3D preview or hero image */}
+            <div 
+              className="aspect-square bg-gradient-primary rounded-2xl shadow-strong relative overflow-hidden group cursor-pointer"
+onClick={() => window.location.href = '/configurator'}
+            >
+              {/* Interactive 3D Preview */}
               <div className="absolute inset-4 bg-surface rounded-xl border-2 border-border/20 flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto animate-glow">
-                    <span className="text-3xl">🖼️</span>
+                <div className="w-full h-full relative bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center overflow-hidden">
+                  {/* Canvas Animation */}
+                  <div className="relative w-32 h-40 transform rotate-12 hover:rotate-6 transition-transform duration-700 cursor-pointer">
+                    {/* Canvas Frame */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-amber-200 rounded-sm shadow-lg">
+                      {/* Canvas Edge */}
+                      <div className="absolute inset-1 bg-white rounded-sm shadow-inner">
+                        {/* Sample Image */}
+                        <div className="w-full h-full bg-gradient-to-br from-purple-200 via-pink-200 to-orange-200 rounded-sm flex items-center justify-center">
+                          <span className="text-4xl opacity-80">🏔️</span>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Canvas Depth */}
+                    <div className="absolute -right-2 top-2 bottom-2 w-2 bg-gradient-to-b from-amber-300 to-amber-400 transform skew-y-12"></div>
+                    <div className="absolute -bottom-2 left-2 right-0 h-2 bg-gradient-to-r from-amber-300 to-amber-400 transform skew-x-12"></div>
                   </div>
-                  <div className="space-y-2">
-                    <p className="font-semibold text-lg">3D Превью</p>
-                    <p className="text-sm text-muted-foreground">
-                      Побачте результат<br />до друку
-                    </p>
-                  </div>
+                  
+                  {/* Floating particles */}
+                  <div className="absolute top-4 left-4 w-2 h-2 bg-primary rounded-full animate-bounce opacity-60" style={{ animationDelay: "0.5s" }}></div>
+                  <div className="absolute top-8 right-6 w-1.5 h-1.5 bg-accent rounded-full animate-bounce opacity-40" style={{ animationDelay: "1s" }}></div>
+                  <div className="absolute bottom-6 left-6 w-1 h-1 bg-success rounded-full animate-bounce opacity-50" style={{ animationDelay: "1.5s" }}></div>
+                </div>
+              </div>
+              
+              {/* Interactive Overlay */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-primary/10 rounded-2xl flex items-center justify-center">
+                <div className="bg-background/90 backdrop-blur-sm rounded-lg p-4 text-center">
+                  <span className="text-2xl mb-2 block">🚀</span>
+                  <p className="font-semibold text-sm">Перейти до конфігуратора</p>
                 </div>
               </div>
               

@@ -415,6 +415,7 @@ export const handlers = [
       const user: User = {
         id: '1',
         email,
+        name: 'Admin User',
         role: 'admin',
         firstName: 'Admin',
         lastName: 'User',

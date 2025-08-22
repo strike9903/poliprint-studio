@@ -2,7 +2,7 @@
 
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 
 interface BreadcrumbItem {
   label: string;
@@ -16,6 +16,8 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   const pathname = usePathname();
+  const params = useParams();
+  const locale = params.locale as string;
   
   // Auto-generate breadcrumbs from pathname if items not provided
   const breadcrumbItems = items || generateBreadcrumbs(pathname);
@@ -28,7 +30,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
       className={`flex items-center space-x-1 text-sm text-muted-foreground ${className}`}
     >
       <Link 
-        href="/" 
+        href={`/${locale}`} 
         className="hover:text-foreground transition-colors p-1"
         aria-label="Головна"
       >

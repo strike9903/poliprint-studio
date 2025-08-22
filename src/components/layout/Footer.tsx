@@ -1,8 +1,14 @@
+"use client";
+
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
+import { useParams } from "next/navigation";
 
 export const Footer = () => {
+  const params = useParams();
+  const locale = params.locale as string || 'uk';
   const quickLinks = [
     { name: "Холст", href: "/catalog/canvas" },
     { name: "Акрил", href: "/catalog/acrylic" },
@@ -73,13 +79,13 @@ export const Footer = () => {
             <h3 className="font-heading font-semibold text-foreground">Популярні послуги</h3>
             <nav className="space-y-2">
               {quickLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
                   className="block text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
@@ -89,13 +95,13 @@ export const Footer = () => {
             <h3 className="font-heading font-semibold text-foreground">Допомога</h3>
             <nav className="space-y-2">
               {helpLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
                   className="block text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
@@ -160,12 +166,12 @@ export const Footer = () => {
             </div>
 
             <div className="flex gap-4 text-sm">
-              <a href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
                 Політика конфіденційності
-              </a>
-              <a href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
+              </Link>
+              <Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
                 Умови використання
-              </a>
+              </Link>
             </div>
           </div>
         </div>

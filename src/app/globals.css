@@ -1,8 +1,75 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Import modern UI utilities */
+@import '../styles/modern-ui.css';
+
+/* Custom animations for modern UX */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Glass morphism effects */
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.8);
+}
 
 /* Poliprint Design System - Premium print service theme */
 
@@ -95,22 +162,27 @@
 }
 
 @layer components {
-  /* Hero button variants */
+  /* Modern button variants */
   .btn-hero {
-    @apply bg-gradient-to-r from-primary to-primary-glow text-primary-foreground font-semibold px-8 py-4 rounded-xl hover:shadow-glow transition-all duration-300 hover:scale-105;
+    @apply bg-gradient-to-r from-primary to-primary-glow text-primary-foreground font-semibold px-6 py-3 rounded-xl hover:shadow-glow transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
   }
   
   .btn-hero-outline {
-    @apply border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground font-semibold px-8 py-4 rounded-xl transition-all duration-300;
+    @apply border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground font-semibold px-6 py-3 rounded-xl transition-all duration-300;
   }
 
-  /* Card styles */
+  /* Card styles with modern spacing */
   .card-elegant {
-    @apply bg-surface border border-border rounded-2xl p-6 shadow-soft hover:shadow-strong transition-all duration-300;
+    @apply bg-surface border border-border rounded-2xl p-4 sm:p-6 shadow-soft hover:shadow-strong transition-all duration-300;
   }
   
   .card-product {
-    @apply bg-surface border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300;
+    @apply bg-surface border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 hover-lift;
+  }
+
+  /* Compact card for mobile */
+  .card-compact {
+    @apply bg-surface border border-border rounded-lg p-3 shadow-sm hover:shadow-md transition-all duration-200;
   }
 
   /* Text gradients */
@@ -118,9 +190,32 @@
     @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }
 
-  /* Glass effect */
+  /* Glass effect with better mobile support */
   .glass {
-    @apply bg-surface/80 backdrop-blur-sm border border-border/50;
+    @apply bg-background/80 backdrop-blur-md border border-border/50;
+  }
+
+  /* Modern scrollbar */
+  .scrollbar-modern {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  
+  .scrollbar-modern::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-modern::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-modern::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+  
+  .scrollbar-modern::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.5);
   }
 
   /* Animation utilities */
@@ -131,29 +226,64 @@
   .animate-glow {
     animation: glow 2s ease-in-out infinite alternate;
   }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
 
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-8px); }
   }
   
   @keyframes glow {
-    from { box-shadow: 0 0 20px hsl(var(--primary) / 0.3); }
-    to { box-shadow: 0 0 30px hsl(var(--primary) / 0.6); }
+    from { box-shadow: 0 0 20px hsl(var(--primary) / 0.2); }
+    to { box-shadow: 0 0 30px hsl(var(--primary) / 0.4); }
   }
 
   /* Focus styles */
   .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 focus:ring-offset-background;
   }
 
   /* Interactive elements */
   .hover-lift {
-    @apply transition-transform duration-200 hover:-translate-y-1;
+    @apply transition-transform duration-200 hover:-translate-y-0.5;
   }
 
   .hover-scale {
-    @apply transition-transform duration-200 hover:scale-105;
+    @apply transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  /* Mobile-first spacing */
+  .section-padding {
+    @apply py-8 sm:py-12 lg:py-16;
+  }
+  
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Status indicators */
+  .status-success {
+    @apply bg-success/10 text-success border border-success/20 rounded-lg px-2 py-1 text-xs font-medium;
+  }
+  
+  .status-warning {
+    @apply bg-warning/10 text-warning border border-warning/20 rounded-lg px-2 py-1 text-xs font-medium;
+  }
+  
+  .status-info {
+    @apply bg-accent/10 text-accent border border-accent/20 rounded-lg px-2 py-1 text-xs font-medium;
+  }
+
+  /* Modern input styling */
+  .input-modern {
+    @apply border-border bg-background/50 backdrop-blur-sm focus:bg-background focus:border-primary/50 transition-all duration-200;
   }
 }
 
