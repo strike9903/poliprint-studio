@@ -1,197 +1,127 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User, AuthUser, LoginCredentials, RegisterData } from '@/types';
+import { AuthUser } from '@/types';
 
-interface AuthStore {
-  user: User | null;
+interface AuthState {
+  user: AuthUser | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  
-  // Actions
-  login: (credentials: LoginCredentials) => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
-  logout: () => Promise<void>;
-  checkAuth: () => Promise<void>;
-  setUser: (user: User) => void;
-  updateUser: (updates: Partial<User>) => void;
+  login: (credentials: { email: string; password: string }) => Promise<void>;
+  logout: () => void;
+  register: (data: { email: string; password: string; firstName?: string; lastName?: string; phone?: string }) => Promise<void>;
   clearError: () => void;
+  checkAuth: () => void;
 }
 
-export const useAuthStore = create<AuthStore>()(
+export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: null,
       token: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
 
-      login: async (credentials: LoginCredentials) => {
-        set({ isLoading: true, error: null });
+      login: async (credentials) => {
+        set({ isLoading: true });
         
         try {
           const response = await fetch('/api/auth/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+            },
             body: JSON.stringify(credentials),
-            credentials: 'include' // Include cookies
           });
 
-          if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Login failed');
+          const data = await response.json();
+
+          if (data.success) {
+            set({
+              user: data.user,
+              token: data.token,
+              isAuthenticated: true,
+              isLoading: false,
+            });
+          } else {
+            throw new Error(data.error || 'Login failed');
           }
-
-          const { user, token } = await response.json();
-          
-          set({
-            user,
-            token,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null
-          });
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Login failed';
-          set({ 
-            isLoading: false, 
-            error: errorMessage,
-            user: null,
-            token: null,
-            isAuthenticated: false
-          });
+          set({ isLoading: false });
           throw error;
         }
       },
 
-      register: async (data: RegisterData) => {
-        set({ isLoading: true, error: null });
+      logout: () => {
+        set({
+          user: null,
+          token: null,
+          isAuthenticated: false,
+        });
+      },
+
+      register: async (data) => {
+        set({ isLoading: true });
         
         try {
           const response = await fetch('/api/auth/register', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+            },
             body: JSON.stringify(data),
-            credentials: 'include' // Include cookies
           });
 
-          if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Registration failed');
-          }
+          const result = await response.json();
 
-          const { user, token } = await response.json();
-          
-          set({
-            user,
-            token,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null
-          });
-        } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Registration failed';
-          set({ 
-            isLoading: false, 
-            error: errorMessage,
-            user: null,
-            token: null,
-            isAuthenticated: false
-          });
-          throw error;
-        }
-      },
-
-      logout: async () => {
-        set({ isLoading: true });
-        
-        try {
-          // Call logout API to clear server-side session
-          await fetch('/api/auth/logout', {
-            method: 'POST',
-            credentials: 'include'
-          });
-        } catch (error) {
-          console.warn('Logout API call failed:', error);
-        } finally {
-          // Clear local state regardless of API call result
-          set({
-            user: null,
-            token: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: null
-          });
-        }
-      },
-
-      checkAuth: async () => {
-        set({ isLoading: true });
-        
-        try {
-          const response = await fetch('/api/auth/me', {
-            credentials: 'include'
-          });
-
-          if (response.ok) {
-            const { user } = await response.json();
+          if (result.success) {
             set({
-              user,
+              user: result.user,
+              token: result.token,
               isAuthenticated: true,
               isLoading: false,
-              error: null
             });
           } else {
-            // Not authenticated
-            set({
-              user: null,
-              token: null,
-              isAuthenticated: false,
-              isLoading: false,
-              error: null
-            });
+            throw new Error(result.error || 'Registration failed');
           }
         } catch (error) {
-          set({
-            user: null,
-            token: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: null
-          });
-        }
-      },
-
-      setUser: (user: User) => {
-        set({ user, isAuthenticated: true, error: null });
-      },
-
-      updateUser: (updates: Partial<User>) => {
-        const currentUser = get().user;
-        if (currentUser) {
-          set({ user: { ...currentUser, ...updates } });
+          set({ isLoading: false });
+          throw error;
         }
       },
 
       clearError: () => {
         set({ error: null });
-      }
+      },
+
+      checkAuth: () => {
+        // Implementation for checking auth status
+        const token = localStorage.getItem('auth-storage');
+        if (token) {
+          try {
+            const parsed = JSON.parse(token);
+            if (parsed.state?.token && parsed.state?.user) {
+              set({
+                user: parsed.state.user,
+                token: parsed.state.token,
+                isAuthenticated: true,
+              });
+            }
+          } catch (error) {
+            console.error('Failed to parse stored auth data:', error);
+          }
+        }
+      },
     }),
     {
-      name: 'poliprint-auth',
-      partialize: (state) => ({ 
-        user: state.user, 
-        token: state.token, 
-        isAuthenticated: state.isAuthenticated 
+      name: 'auth-storage',
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+        isAuthenticated: state.isAuthenticated,
       }),
-      // Auto-check auth on load
-      onRehydrateStorage: () => (state) => {
-        if (state?.isAuthenticated) {
-          state.checkAuth();
-        }
-      }
     }
   )
 );

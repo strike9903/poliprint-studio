@@ -9,5 +9,5 @@ export async function fetchProducts(filters?: any): Promise<Product[]> {
   if (!response.ok) throw new Error('Failed to fetch products');
   
   const data: ApiResponse<Product[]> = await response.json();
-  return data.data;
+  return data.data || [];
 }

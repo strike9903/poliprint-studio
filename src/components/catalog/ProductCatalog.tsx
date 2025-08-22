@@ -175,7 +175,7 @@ export function ProductCatalog({ locale }: ProductCatalogProps) {
   }, [products, filters, sortBy]);
 
   const handleFilterChange = (newFilters: Partial<CatalogFiltersType>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    setFilters((prev: CatalogFiltersType) => ({ ...prev, ...newFilters }));
   };
 
   const handleSortChange = (newSort: string) => {

@@ -51,8 +51,8 @@ export function ProductGrid({ products, isLoading }: ProductGridProps) {
             <div className="aspect-square bg-muted rounded-t-lg overflow-hidden">
               {product.images?.[0] && (
                 <img
-                  src={typeof product.images[0] === 'string' ? product.images[0] : product.images[0].url}
-                  alt={typeof product.title === 'string' ? product.title : 'Product'}
+                  src={product.images[0]}
+                  alt={product.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
               )}
@@ -71,11 +71,9 @@ export function ProductGrid({ products, isLoading }: ProductGridProps) {
             )}
           </CardHeader>
           <CardContent className="p-4">
-            <h3 className="font-medium mb-2 line-clamp-2">
-              {typeof product.title === 'string' ? product.title : 'Product'}
-            </h3>
+            <h3 className="font-medium mb-2 line-clamp-2">{product.title}</h3>
             <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-              {typeof product.description === 'string' ? product.description : ''}
+              {product.description}
             </p>
             <div className="flex items-center justify-between">
               <div className="text-lg font-bold">

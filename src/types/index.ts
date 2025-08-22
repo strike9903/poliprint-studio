@@ -1,319 +1,224 @@
-// Core types for Poliprint Studio
-
 export interface Product {
-  id: string;
+  id: number;
   slug: string;
-  title: Record<string, string>; // i18n titles
-  description: Record<string, string>; // i18n descriptions
-  category: ProductCategory;
+  title: string;
+  description: string;
   basePrice: number;
-  currency: 'UAH';
-  images: ProductImage[];
+  priceFrom?: number;
+  currency: string;
+  category: string;
+  images: string[];
+  tags: string[];
+  rating?: number;
+  isPopular?: boolean;
+  isNew?: boolean;
+  inStock: boolean;
+  deliveryDays: number;
+  material?: string;
+  size?: string;
+  finish?: string;
+  urgency?: string;
+  printType?: string;
   configSchema: ProductConfigSchema;
-  techSpecs: Record<string, any>;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+  options: ProductOption[];
+  metadata: Record<string, any>;
 }
-
-export interface ProductImage {
-  id: string;
-  url: string;
-  alt: Record<string, string>;
-  type: 'gallery' | 'mockup' | '3d' | 'tech';
-  order: number;
-}
-
-export type ProductCategory = 
-  | 'canvas' 
-  | 'acrylic' 
-  | 'posters' 
-  | 'business-cards' 
-  | 'flyers' 
-  | 'brochures' 
-  | 'stickers' 
-  | 'calendars' 
-  | 'packaging' 
-  | 'rigid' 
-  | 'rollups' 
-  | 'tshirts';
 
 export interface ProductConfigSchema {
-  type: ProductCategory;
+  type: 'canvas' | 'acrylic' | 'business-cards' | 'flyers' | 'brochures' | 'stickers' | 'posters' | 'packaging' | 'apparel';
+  version: string;
   fields: ConfigField[];
-  dependencies?: ConfigDependency[];
-  validations?: ConfigValidation[];
 }
 
 export interface ConfigField {
   id: string;
-  type: 'select' | 'radio' | 'checkbox' | 'number' | 'text' | 'dimension' | 'file' | 'color';
-  label: Record<string, string>;
+  type: 'select' | 'number' | 'boolean' | 'color' | 'file' | 'text';
+  label: string;
   required: boolean;
-  options?: ConfigOption[];
-  defaultValue?: any;
-  min?: number;
-  max?: number;
-  step?: number;
-  unit?: string;
-  accepts?: string[]; // file types
+  options?: { value: string; label: string; price?: number }[];
+  validation?: {
+    min?: number;
+    max?: number;
+    pattern?: string;
+  };
 }
 
-export interface ConfigOption {
+export interface ProductOption {
+  id: string;
+  name: string;
+  values: OptionValue[];
+  required: boolean;
+  type: 'single' | 'multiple';
+}
+
+export interface OptionValue {
+  id: string;
   value: string;
-  label: Record<string, string>;
-  priceModifier?: number;
-  priceType?: 'fixed' | 'percentage' | 'multiplier';
-  disabled?: boolean;
+  label: string;
+  priceModifier: number;
+  description?: string;
 }
 
-export interface ConfigDependency {
-  field: string;
-  depends: string;
-  values: string[];
-  action: 'show' | 'hide' | 'enable' | 'disable';
-}
-
-export interface ConfigValidation {
-  field: string;
-  type: 'required' | 'min' | 'max' | 'pattern' | 'custom';
-  value?: any;
-  message: Record<string, string>;
-}
-
-// Dimension types
-export interface Dimension {
-  unit: 'mm' | 'cm' | 'in';
-  width: number;
-  height: number;
-}
-
-// Specific product configs
-export interface CanvasConfig {
-  dimensionPreset?: '30x40' | '40x60' | '60x90' | 'custom';
-  customSize?: Dimension;
-  edge: 'gallery' | 'mirror' | 'solid';
-  edgeColor?: string;
-  stretcherDepth: '18mm' | '30mm';
-  texture: 'classic' | 'linen' | 'premium';
-  hanging?: boolean;
-  fileId?: string;
-}
-
-export interface AcrylicConfig {
-  size: Dimension;
-  thickness: '3mm' | '5mm' | '8mm' | '10mm';
-  substrate?: 'white' | 'black' | 'none';
-  mounting: 'direct' | 'standoff' | 'facemount';
-  fileId?: string;
-}
-
-export interface BusinessCardConfig {
-  format: '90x50' | '85x55' | 'custom';
-  customSize?: Dimension;
-  corners: 'sharp' | 'rounded';
-  paper: string;
-  lamination?: string;
-  sides: '1' | '2';
-  quantity: number;
-  turnaround: string;
-  fileId?: string;
-  approvedForPrint?: boolean;
-}
-
-export interface BrochureConfig {
-  format: string;
-  pages: number;
-  binding: 'staple' | 'glue' | 'wire';
-  cover?: string;
-  lamination?: string;
-  quantity: number;
-  fileId?: string;
-}
-
-export interface StickerConfig {
-  carrier: 'sheet' | 'roll';
-  shape: 'circle' | 'square' | 'rectangle' | 'custom';
-  cutContour: boolean;
-  quantity: number;
-  gap?: number;
-  fileId?: string;
-}
-
-export interface TShirtConfig {
-  model: string;
-  color: string;
-  sizes: Record<string, number>; // XS: 2, S: 5, etc.
-  placements: TShirtPlacement[];
-}
-
-export interface TShirtPlacement {
-  zone: 'front' | 'back' | 'left-sleeve' | 'right-sleeve';
-  fileId: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  dpi: number;
-}
-
-// Cart and order types
 export interface CartItem {
   id: string;
-  productId: string;
+  productId: number;
   config: Record<string, any>;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
-  fileUploads?: FileUpload[];
-  preview?: string;
+  fileUploads: FileUpload[];
 }
 
 export interface FileUpload {
   id: string;
   filename: string;
-  originalName: string;
-  size: number;
-  mimeType: string;
   url: string;
-  thumbnailUrl?: string;
-  preflightStatus?: PreflightStatus;
-  uploadedAt: string;
+  size: number;
+  type: string;
+  uploadedAt: Date;
+  preflightResults?: PreflightResult;
 }
 
-export interface PreflightStatus {
-  status: 'pending' | 'ok' | 'warning' | 'error';
-  dpi?: number;
-  dimensions?: Dimension;
-  colorProfile?: string;
-  bleed?: boolean;
-  issues?: PreflightIssue[];
+export interface PreflightResult {
+  dpi: number;
+  bleedMm: number;
+  issues: PreflightIssue[];
+  score: 'good' | 'warning' | 'error';
 }
 
 export interface PreflightIssue {
-  code: string;
-  level: 'info' | 'warning' | 'error';
-  message: Record<string, string>;
-  fix?: string;
+  type: 'dpi' | 'bleed' | 'colorMode' | 'transparency' | 'fonts';
+  severity: 'warning' | 'error';
+  message: string;
+  suggestion?: string;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  phone?: string;
+  avatar?: string;
+  role: 'customer' | 'admin';
+  createdAt: Date;
+  preferences: UserPreferences;
+}
+
+export interface UserPreferences {
+  language: 'uk' | 'ru';
+  currency: 'UAH';
+  notifications: boolean;
+  newsletter: boolean;
 }
 
 export interface Order {
   id: string;
-  orderNumber: string;
+  userId: string;
+  items: CartItem[];
   status: OrderStatus;
-  items: OrderItem[];
-  subtotal: number;
-  shippingCost: number;
-  discount: number;
-  total: number;
-  currency: 'UAH';
-  customer: Customer;
-  shippingInfo: ShippingInfo;
-  payment: PaymentInfo;
-  timeline: OrderTimeline[];
-  trackingNumber?: string;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
+  totalPrice: number;
+  currency: string;
+  paymentStatus: PaymentStatus;
+  deliveryInfo: DeliveryInfo;
+  createdAt: Date;
+  updatedAt: Date;
+  timeline: OrderTimelineItem[];
 }
 
 export type OrderStatus = 
-  | 'draft' 
-  | 'pending' 
-  | 'paid' 
-  | 'preflight' 
-  | 'production' 
-  | 'quality-check' 
-  | 'packaging' 
-  | 'shipped' 
-  | 'delivered' 
+  | 'pending'
+  | 'confirmed' 
+  | 'in-production'
+  | 'ready'
+  | 'shipped'
+  | 'delivered'
   | 'cancelled';
 
-export interface OrderItem {
-  id: string;
-  productId: string;
-  productTitle: string;
-  config: Record<string, any>;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
-  files: FileUpload[];
-  preview?: string;
-  notes?: string;
-}
+export type PaymentStatus = 
+  | 'pending'
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'refunded';
 
-export interface Customer {
-  email: string;
-  phone: string;
-  firstName?: string;
-  lastName?: string;
-  isGuest?: boolean;
-}
-
-export interface ShippingInfo {
-  method: 'novaposhta-branch' | 'novaposhta-courier';
-  address: NovaPoshtaAddress;
+export interface DeliveryInfo {
+  method: 'nova-poshta' | 'ukr-poshta' | 'pickup';
+  address: {
+    city: string;
+    warehouse: string;
+    recipientName: string;
+    recipientPhone: string;
+  };
+  trackingNumber?: string;
+  estimatedDelivery?: Date;
   cost: number;
-  estimatedDays: number;
 }
 
-export interface NovaPoshtaAddress {
-  city: string;
-  cityRef?: string;
-  area: string;
-  areaRef?: string;
-  warehouse?: string;
-  warehouseRef?: string;
-  street?: string;
-  building?: string;
-  apartment?: string;
-}
-
-export interface PaymentInfo {
-  method: 'liqpay' | 'mono' | 'wayforpay';
-  status: 'pending' | 'paid' | 'failed' | 'refunded';
-  transactionId?: string;
-  paidAt?: string;
-}
-
-export interface OrderTimeline {
+export interface OrderTimelineItem {
   status: OrderStatus;
-  timestamp: string;
-  note?: Record<string, string>;
-  actor?: string;
+  timestamp: Date;
+  message: string;
+  details?: string;
 }
 
-// User and auth types
-export interface User {
+export interface Category {
   id: string;
-  email: string;
-  name: string; // Display name
-  phone?: string;
-  firstName?: string;
-  lastName?: string;
-  avatar?: string | null;
-  role: 'user' | 'admin';
-  addresses?: SavedAddress[];
-  preferences?: UserPreferences;
-  emailVerified?: boolean;
-  createdAt?: string;
-  stats?: UserStats;
+  name: string;
+  slug: string;
+  description: string;
+  image: string;
+  isPopular: boolean;
+  productCount: number;
+  metadata: {
+    seoTitle?: string;
+    seoDescription?: string;
+    parentCategory?: string;
+  };
 }
 
-export interface UserStats {
-  totalOrders: number;
-  totalSpent: number;
-  memberSince: string;
+export interface FilterOption {
+  id: string;
+  label: string;
+  count?: number;
 }
 
-// Auth-specific types
+export interface CatalogFilters {
+  categories?: string[];
+  materials?: string[];
+  formats?: string[];
+  priceMin?: number;
+  priceMax?: number;
+  inStock?: boolean;
+  rating?: number;
+  search?: string;
+}
+
+// API Response types
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+// Auth types
 export interface AuthUser {
   id: string;
   email: string;
   name: string;
   phone?: string;
   avatar?: string | null;
-  role: 'user' | 'admin';
+  role: 'customer' | 'admin';
 }
 
 export interface LoginCredentials {
@@ -329,46 +234,7 @@ export interface RegisterData {
   phone?: string;
 }
 
-export interface AuthResponse {
-  success: boolean;
-  user: AuthUser;
-  token: string;
-  message?: string;
-}
-
-export interface SavedAddress {
-  id: string;
-  label: string;
-  novaPoshtaAddress: NovaPoshtaAddress;
-  isDefault: boolean;
-}
-
-export interface UserPreferences {
-  language: 'ua' | 'ru';
-  currency: 'UAH';
-  notifications: {
-    email: boolean;
-    sms: boolean;
-  };
-}
-
-// API response types
-export interface ApiResponse<T> {
-  data: T;
-  success: boolean;
-  message?: string;
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-}
-
+// Pricing types
 export interface PricingRequest {
   items: Array<{
     productId: string;
@@ -397,40 +263,12 @@ export interface PricingItem {
 }
 
 export interface PriceBreakdownItem {
-  label: Record<string, string>;
+  label: string;
   amount: number;
   type: 'base' | 'option' | 'discount' | 'shipping';
 }
 
-// Templates
-export interface Template {
-  id: string;
-  title: Record<string, string>;
-  description: Record<string, string>;
-  category: ProductCategory;
-  tags: string[];
-  previewUrl: string;
-  isPremium: boolean;
-  downloads: number;
-  rating: number;
-  createdAt: string;
-}
-
-// Blog
-export interface BlogPost {
-  id: string;
-  slug: string;
-  title: Record<string, string>;
-  excerpt: Record<string, string>;
-  content: Record<string, string>;
-  coverImage: string;
-  author: string;
-  tags: string[];
-  publishedAt: string;
-  isPublished: boolean;
-}
-
-// Nova Poshta API types
+// Nova Poshta types
 export interface NovaPoshtaCity {
   ref: string;
   description: string;
@@ -446,7 +284,30 @@ export interface NovaPoshtaWarehouse {
   cityRef: string;
 }
 
-export interface NovaPoshtaDeliveryPrice {
-  cost: number;
-  estimatedDeliveryDate: string;
+// Templates
+export interface Template {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  tags: string[];
+  previewUrl: string;
+  isPremium: boolean;
+  downloads: number;
+  rating: number;
+  createdAt: string;
+}
+
+// Blog
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  author: string;
+  tags: string[];
+  publishedAt: string;
+  isPublished: boolean;
 }
