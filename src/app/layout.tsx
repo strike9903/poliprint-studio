@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
-import { getLocale } from "next-intl/server";
 import "./globals.css";
 import { Providers } from "@/components/providers/providers";
 import { Toaster } from "@/components/ui/toaster";
-import { enableMocking } from "@/lib/msw";
 
 const inter = Inter({ 
   subsets: ["latin", "latin-ext", "cyrillic"], 
@@ -21,7 +19,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Poliprint Studio - Онлайн типографія 24/7",
   description: "Професійний друк холстів, акрилу, поліграфії та мерчу. Завантажуйте макети онлайн, отримуйте готові вироби швидко та якісно.",
-  keywords: "друк холст, акрил, візитки, поліграфія, онлайн типографія, печать холст, акрил, визитки, полиграфия",
+  keywords: "друк холст, акрил, візитки, поліграфія, онлайн типографія",
   authors: [{ name: "Poliprint Studio" }],
   creator: "Poliprint Studio",
   publisher: "Poliprint Studio",
@@ -47,33 +45,16 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
   },
 };
 
-// Enable MSW in development
-if (process.env.NODE_ENV === 'development') {
-  enableMocking();
-}
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const locale = await getLocale();
-  
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang="uk" suppressHydrationWarning>
       <body className={`${inter.variable} ${plusJakartaSans.variable} font-sans antialiased`}>
         <Providers>
           {children}

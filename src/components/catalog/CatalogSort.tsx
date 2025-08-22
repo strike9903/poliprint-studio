@@ -1,87 +1,55 @@
 "use client";
 
-import { ArrowUpDown, ArrowUp, ArrowDown, TrendingUp, Clock, Star, Truck, CheckCircle } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Grid, List } from 'lucide-react';
 
 interface CatalogSortProps {
-  sortBy: 'popular' | 'price-asc' | 'price-desc' | 'newest' | 'rating' | 'delivery' | 'in-stock';
-  onSortChange: (value: CatalogSortProps['sortBy']) => void;
+  sortBy: string;
+  onSortChange: (sort: string) => void;
+  viewMode: 'grid' | 'list';
+  onViewModeChange: (mode: 'grid' | 'list') => void;
 }
 
-export function CatalogSort({ sortBy, onSortChange }: CatalogSortProps) {
-  const sortOptions = [
-    { 
-      value: 'popular', 
-      label: 'За популярністю', 
-      icon: TrendingUp,
-      description: 'Найбільш замовлювані товари'
-    },
-    { 
-      value: 'price-asc', 
-      label: 'Ціна: від дешевих', 
-      icon: ArrowUp,
-      description: 'Спочатку недорогі товари'
-    },
-    { 
-      value: 'price-desc', 
-      label: 'Ціна: від дорогих', 
-      icon: ArrowDown,
-      description: 'Спочатку дорогі товари'
-    },
-    { 
-      value: 'newest', 
-      label: 'Нові надходження', 
-      icon: Clock,
-      description: 'Останні додані товари'
-    },
-    { 
-      value: 'rating', 
-      label: 'За рейтингом', 
-      icon: Star,
-      description: 'Найвищі оцінки клієнтів'
-    },
-    { 
-      value: 'delivery', 
-      label: 'За швидкістю виконання', 
-      icon: Truck,
-      description: 'Найшвидше виготовлення'
-    },
-    { 
-      value: 'in-stock', 
-      label: 'Наявні в наявності', 
-      icon: CheckCircle,
-      description: 'Готові до відправки'
-    },
-  ];
-
-  const currentOption = sortOptions.find(option => option.value === sortBy);
-
+export function CatalogSort({
+  sortBy,
+  onSortChange,
+  viewMode,
+  onViewModeChange
+}: CatalogSortProps) {
   return (
-    <Select value={sortBy} onValueChange={onSortChange}>
-      <SelectTrigger className="w-[240px] h-10">
-        <div className="flex items-center gap-2">
-          <ArrowUpDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-          <SelectValue placeholder="Оберіть сортування" />
-        </div>
-      </SelectTrigger>
-      <SelectContent className="w-[300px]">
-        {sortOptions.map((option) => {
-          const Icon = option.icon;
-          return (
-            <SelectItem key={option.value} value={option.value} className="py-3">
-              <div className="flex items-start gap-3">
-                <Icon className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm">{option.label}</div>
-                  <div className="text-xs text-muted-foreground mt-0.5">
-                    {option.description}
-                  </div>
-                </div>
-              </div>
-            </SelectItem>
-          );
-        })}
-      </SelectContent>
-    </Select>
+    <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center gap-4">
+        <Select value={sortBy} onValueChange={onSortChange}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Сортувати" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="popular">Популярні</SelectItem>
+            <SelectItem value="price-asc">Ціна: від дешевих</SelectItem>
+            <SelectItem value="price-desc">Ціна: від дорогих</SelectItem>
+            <SelectItem value="newest">Нові</SelectItem>
+            <SelectItem value="rating">Рейтинг</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Button
+          variant={viewMode === 'grid' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => onViewModeChange('grid')}
+        >
+          <Grid className="h-4 w-4" />
+        </Button>
+        <Button
+          variant={viewMode === 'list' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => onViewModeChange('list')}
+        >
+          <List className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
   );
 }
